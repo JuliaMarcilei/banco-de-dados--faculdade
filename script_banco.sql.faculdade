@@ -1,0 +1,73 @@
+# Gerando o código SQL (modelo físico) completo
+
+sql_code = """
+CREATE DATABASE SistemaFaculdade;
+USE SistemaFaculdade;
+
+CREATE TABLE Aluno (
+    id_aluno INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100),
+    cpf VARCHAR(14) UNIQUE,
+    data_nascimento DATE,
+    email VARCHAR(100),
+    telefone VARCHAR(20),
+    endereco TEXT
+);
+
+CREATE TABLE Professor (
+    id_professor INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100),
+    cpf VARCHAR(14) UNIQUE,
+    formacao VARCHAR(100),
+    email VARCHAR(100),
+    telefone VARCHAR(20)
+);
+
+CREATE TABLE Curso (
+    id_curso INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100),
+    tipo VARCHAR(50),
+    duracao INT
+);
+
+CREATE TABLE Disciplina (
+    id_disciplina INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100),
+    carga_horaria INT,
+    id_curso INT,
+    FOREIGN KEY (id_curso) REFERENCES Curso(id_curso)
+);
+
+CREATE TABLE Turma (
+    id_turma INT PRIMARY KEY AUTO_INCREMENT,
+    id_curso INT,
+    semestre VARCHAR(10),
+    ano INT,
+    FOREIGN KEY (id_curso) REFERENCES Curso(id_curso)
+);
+
+CREATE TABLE Matricula (
+    id_matricula INT PRIMARY KEY AUTO_INCREMENT,
+    id_aluno INT,
+    id_turma INT,
+    data_matricula DATE,
+    FOREIGN KEY (id_aluno) REFERENCES Aluno(id_aluno),
+    FOREIGN KEY (id_turma) REFERENCES Turma(id_turma)
+);
+
+CREATE TABLE Nota (
+    id_nota INT PRIMARY KEY AUTO_INCREMENT,
+    id_matricula INT,
+    id_disciplina INT,
+    nota DECIMAL(5,2),
+    FOREIGN KEY (id_matricula) REFERENCES Matricula(id_matricula),
+    FOREIGN KEY (id_disciplina) REFERENCES Disciplina(id_disciplina)
+);
+"""
+
+# Salvando em arquivo .sql
+sql_file_path = "/mnt/data/modelo_fisico_faculdade.sql"
+with open(sql_file_path, "w") as f:
+    f.write(sql_code)
+
+sql_file_path
